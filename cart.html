@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shporta Ime</title>
+  <link rel="stylesheet" type="text/css" href="cart.css">
+  <script type="module">  import {Header} from './Header.js'; </script>
+</head>
+<body>
+  <div class="container">
+  <h1>Flamujt në Shporten time</h1>
+  <div  id="cart-items"></div>
+ 
+<h2 class="total-price"></h2>
+  <form class="checkout-form" id="checkout-form">
+     <div class="total-price"></div>
+     <div class="totali"></div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="email">Email address:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="phone">Phone number:</label>
+    <input type="tel" id="phone" name="phone" required><br>
+
+    <button type="submit">Porosit</button>
+
+   <a id="rhome" href="index.html">Kthehu ne Fillim</a>
+  </form>
+</div>
+
+  <script>
+let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+const cartItemsDiv = document.getElementById("cart-items");
+
+const form1 = document.getElementById("checkout-form");
+if (cartItems.length === 0) {
+  const emptyCartDiv = document.createElement("div");
+  emptyCartDiv.innerHTML = `Kartela juaj eshte e zbrazet.<br>`;
+
+  const homeButton = document.createElement("button");
+  homeButton.textContent = "Kthehu Mbrapa";
+  homeButton.classList.add ("gohome");
+  homeButton.addEventListener("click", () => {
+    window.location.href = "index.html"; 
+  });
+
+  emptyCartDiv.appendChild(homeButton);
+  cartItemsDiv.appendChild(emptyCartDiv);
+  form1.style.display = "none"; 
+}
+
+ else {
+  cartItems.forEach((item, index) => {
+    const itemDiv = document.createElement("div");
+    itemDiv.classList.add("item");
+
+    const nameDiv = document.createElement("div");
+    nameDiv.textContent = item.name;
+    nameDiv.classList.add("name");
+    itemDiv.appendChild(nameDiv);
+
+    const flagImg = document.createElement("img");
+    flagImg.src = item.flag;
+    itemDiv.appendChild(flagImg);
+
+    
+
+
+const price = document.createElement("div");
+price.textContent = `${item.price}$`; 
+price.classList.add("price");
+itemDiv.appendChild(price);
+
+
+
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Fshij";
+    deleteButton.classList.add("delete-btn");
+    deleteButton.addEventListener("click", () => {
+      cartItems.splice(index, 1);
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      itemDiv.remove();
+      location.reload();
+    });
+    itemDiv.appendChild(deleteButton);
+
+    cartItemsDiv.appendChild(itemDiv);
+  });
+}
+
+const form = document.getElementById("checkout-form");
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+  const response = confirm("Konfirmo Porosine ?");
+  if (response === true) {
+  alert(`Faleminderit, ${name}, per porosine! Se Shpejti do ju kontaktojme ne ${email} ose ${phone} .`);
+  localStorage.removeItem("cartItems");
+
+  location.reload();}
+});
+
+
+///pjesa dyte 
+const totaliDiv = document.querySelector(".totali");
+
+window.addEventListener("DOMContentLoaded", () => {
+  let totalPrice = 0;
+  cartItems.forEach(item => {
+    totalPrice += parseFloat(item.price);
+  });
+  const totalPriceDiv = document.createElement("div");
+  totalPriceDiv.classList.add("total-price");
+  totalPriceDiv.textContent = `Totali: ${totalPrice.toFixed(2)}$`;
+  totaliDiv.appendChild(totalPriceDiv);
+});
+
+
+
+  </script>
+
+</body>
+</html>
